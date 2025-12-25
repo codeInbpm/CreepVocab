@@ -24,7 +24,8 @@ public class User {
     private Integer challengeHighScore;
     private Integer totalBattles;
     private Integer winCount;
-    
+    private Integer hintCards;
+
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }
