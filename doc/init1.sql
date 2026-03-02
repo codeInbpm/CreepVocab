@@ -178,3 +178,114 @@ CREATE TABLE `user_course` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_course` (`user_id`,`course_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='User My Courses';
+
+-- ----------------------------
+-- Table structure for book_category
+-- ----------------------------
+DROP TABLE IF EXISTS `book_category`;
+CREATE TABLE `book_category` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL COMMENT 'Category Name',
+  `sort_order` int(11) DEFAULT '0' COMMENT 'Order in Sidebar',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Book Category';
+
+INSERT INTO `book_category` (`id`, `name`, `sort_order`) VALUES
+(1, '听单词', 1),
+(2, '综合听力', 2),
+(3, '公开课', 3),
+(4, '有声读物', 4),
+(5, 'Podcast', 5),
+(6, '发音口语', 6),
+(7, '娱乐影音', 7),
+(8, '职场英语', 8),
+(9, '双语精读', 9),
+(10, '词汇', 10),
+(11, '英语教材', 11),
+(12, '入门英语', 12),
+(13, 'VIP专属', 13);
+
+
+-- ----------------------------
+-- Table structure for book
+-- ----------------------------
+DROP TABLE IF EXISTS `book`;
+CREATE TABLE `book` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `category_id` bigint(20) NOT NULL,
+  `title` varchar(128) NOT NULL,
+  `cover_image` varchar(255) DEFAULT NULL COMMENT 'URL or color gradient or path',
+  `tags` varchar(255) DEFAULT NULL COMMENT 'Comma separated tags (e.g. 全部,四六级词汇)',
+  `article_count` int(11) DEFAULT '0' COMMENT 'Number of articles/lessons',
+  `view_count` int(11) DEFAULT '0' COMMENT 'Total views in ten thousands (万)',
+  `author` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_category` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Study Book';
+
+INSERT INTO `book` (`category_id`, `title`, `cover_image`, `tags`, `article_count`, `view_count`, `author`) VALUES
+(10, 'TIME单挑1000', 'linear-gradient(135deg, #FFB74D 0%, #FFA726 100%)', '全部,四六级词汇,VOA词汇', 39, 9, 'TIME'),
+(10, 'Maddy老师教你实用词汇', 'linear-gradient(135deg, #FFD54F 0%, #FFCA28 100%)', '全部,闭眼飘单词,华研词汇', 129, 111, 'Maddy老师'),
+(10, '15篇文章贯通六级词汇', 'linear-gradient(135deg, #4FC3F7 0%, #29B6F6 100%)', '全部,四六级词汇', 28, 32, '四六级教研组'),
+(10, '英语词汇测评小站', 'linear-gradient(135deg, #7986CB 0%, #5C6BC0 100%)', '全部,刘毅词汇', 35, 20, '英语小站'),
+(10, '词汇分类速记', 'linear-gradient(135deg, #FF8A65 0%, #FF7043 100%)', '全部,四六级词汇,新概念', 50, 48, '速记专家'),
+(10, '牛津英语词汇 (初级) (第二版)', 'linear-gradient(135deg, #81C784 0%, #66BB6A 100%)', '全部,入门', 42, 34, '牛津大学出版社'),
+(10, '牛津英语词汇 (中级) (第二版)', 'linear-gradient(135deg, #BA68C8 0%, #AB47BC 100%)', '全部,进阶', 45, 10, '牛津大学出版社');
+
+
+-- ----------------------------
+-- Table structure for book_article
+-- ----------------------------
+DROP TABLE IF EXISTS `book_article`;
+CREATE TABLE `book_article` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `book_id` bigint(20) NOT NULL,
+  `title` varchar(255) NOT NULL COMMENT 'e.g. 01 用来描述心情的...',
+  `duration_str` varchar(20) DEFAULT NULL COMMENT 'e.g. 11:59',
+  `size_str` varchar(20) DEFAULT NULL COMMENT 'e.g. 40.59MB',
+  `publish_date` date DEFAULT NULL COMMENT 'e.g. 2022-04-08',
+  `sort_order` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_book` (`book_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Book Articles/Chapters';
+
+INSERT INTO `book_article` (`book_id`, `title`, `duration_str`, `size_str`, `publish_date`, `sort_order`) VALUES
+(1, '01 用来描述心情的20个形容词 20 adjectives to describe feelings!', '11:59', '40.59MB', '2022-04-08', 1),
+(1, '02 用来询问和谈论某人的个性的15个形容词 15 English adjectives to...', '12:07', '36.67MB', '2022-04-15', 2),
+(1, '03 用来谈论受伤的10个短语和词汇 10 words to talk about injuries...', '09:34', '30.02MB', '2022-04-22', 3),
+(1, '04 如何通过电影学习英语 How To Learn English With Movies...', '24:34', '77.93MB', '2022-04-29', 4),
+(1, '05 关于食物的20个短语和词汇 20 Words To Talk About Food...', '11:23', '31.40MB', '2022-05-06', 5);
+
+
+-- ----------------------------
+-- Table structure for book_word
+-- ----------------------------
+DROP TABLE IF EXISTS `book_word`;
+CREATE TABLE `book_word` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `book_id` bigint(20) NOT NULL,
+  `word_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_book_word` (`book_id`,`word_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Words contained in a book';
+
+-- Mock data: Link book 1 (TIME单挑) to word 1 (abandon), 2 (ability), 3 (absent)
+INSERT INTO `book_word` (`book_id`, `word_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 3);
+
+
+-- ----------------------------
+-- Table structure for user_book
+-- ----------------------------
+DROP TABLE IF EXISTS `user_book`;
+CREATE TABLE `user_book` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `book_id` bigint(20) NOT NULL,
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Subscribed/Favorited Time',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_book` (`user_id`,`book_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='User Subscribed/Favorited Books';
+
