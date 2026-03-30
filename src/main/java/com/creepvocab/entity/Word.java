@@ -16,4 +16,6 @@ public class Word {
     private String example;
     // Difficulty level or category (e.g., CET4, CET6)
     private String category; 
+    // Audio Object Storage URL
+    private String audioUrl;
 }

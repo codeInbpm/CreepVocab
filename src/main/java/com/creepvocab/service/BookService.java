@@ -23,7 +23,7 @@ public class BookService {
     private final BookWordMapper bookWordMapper;
     private final UserBookMapper userBookMapper;
     private final WordMapper wordMapper;
-    private final UserWordMapper userWordMapper;
+    private final UserWordProgressMapper userWordProgressMapper;
 
     public List<BookCategory> getCategoryList() {
         return bookCategoryMapper.selectList(
@@ -103,10 +103,10 @@ public class BookService {
             ).stream().map(BookWord::getWordId).collect(Collectors.toList());
             
             if (!bookWordIds.isEmpty()) {
-                myVocab = userWordMapper.selectCount(
-                        new LambdaQueryWrapper<UserWord>()
-                                .eq(UserWord::getUserId, userId)
-                                .in(UserWord::getWordId, bookWordIds)
+                myVocab = userWordProgressMapper.selectCount(
+                        new LambdaQueryWrapper<UserWordProgress>()
+                                .eq(UserWordProgress::getUserId, userId)
+                                .in(UserWordProgress::getWordId, bookWordIds)
                 );
             }
         }

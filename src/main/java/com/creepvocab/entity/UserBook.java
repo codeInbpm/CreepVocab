@@ -14,5 +14,6 @@ public class UserBook {
     private Long id;
     private Long userId;
     private Long bookId;
+    private Integer dailyCount; // Daily Word Target
     private LocalDateTime createTime;
 }
